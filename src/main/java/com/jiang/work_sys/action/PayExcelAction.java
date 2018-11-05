@@ -22,7 +22,7 @@ public class PayExcelAction {
 	@RequestMapping("b")
 	public void uploadPayExcelChange(HttpServletRequest req, HttpServletResponse rep, @RequestParam("file") File file)
 			throws IOException {
-		System.out.println("1212");
+		System.out.println("12dsaddfdsfds12");
 		rep.getWriter().write("d12a");
 		rep.getWriter().flush();
 		rep.getWriter().close();
