@@ -9,5 +9,6 @@ public class WorkSysApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WorkSysApplication.class, args);
+		
 	}
 }
