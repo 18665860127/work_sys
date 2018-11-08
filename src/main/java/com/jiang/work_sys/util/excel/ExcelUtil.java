@@ -27,11 +27,21 @@ public class ExcelUtil {
 		return readExcel(path, null);
 	}
 
+	public static List<List<List<String>>> readExcel(File file) throws InvalidFormatException, IOException {
+		return readExcel(file, null);
+	}
+
 	public static List<List<List<String>>> readExcel(String path, int[] firstRowIndex)
 			throws InvalidFormatException, IOException {
 		// -----sheet表格list
-		List<List<List<String>>> sheetsList = new ArrayList<>();
 		File file = new File(path);
+		return readExcel(file, firstRowIndex);
+	}
+
+	public static List<List<List<String>>> readExcel(File file, int[] firstRowIndex)
+			throws InvalidFormatException, IOException {
+		// -----sheet表格list
+		List<List<List<String>>> sheetsList = new ArrayList<>();
 		// 判断文件是否存在
 		if (file.isFile() && file.exists()) {
 			Workbook wb = getWorkbok(file);
@@ -62,6 +72,11 @@ public class ExcelUtil {
 			throws InvalidFormatException, IOException {
 		// -----sheet表格list
 		File file = new File(path);
+		return readExcel(file, sheetIndex, firstRowIndex);
+	}
+
+	public static List<List<String>> readExcel(File file, int sheetIndex, int firstRowIndex)
+			throws InvalidFormatException, IOException {
 		// -----每个sheet表格的行数
 		List<List<String>> rowsList = new ArrayList<>();
 		// 判断文件是否存在
@@ -76,6 +91,10 @@ public class ExcelUtil {
 
 	public static List<List<String>> readExcel(String path, int sheetIndex) throws InvalidFormatException, IOException {
 		return readExcel(path, sheetIndex, 0);
+	}
+	
+	public static List<List<String>> readExcel(File file, int sheetIndex) throws InvalidFormatException, IOException {
+		return readExcel(file, sheetIndex, 0);
 	}
 
 	public static void createExcel(List<List<List<String>>> sheetList, OutputStream ostream) throws IOException {
@@ -161,7 +180,7 @@ public class ExcelUtil {
 							} else {
 								cell.setCellType(CellType.STRING);
 								// 获取单元格的值
-								value = cell.getStringCellValue();
+								value = cell.getStringCellValue().trim();
 								// double cellValD = cell.getNumericCellValue();
 								// long cellValL =
 								// Double.valueOf(cellValD).longValue();
@@ -180,7 +199,7 @@ public class ExcelUtil {
 						else {
 							cell.setCellType(CellType.STRING);
 							// 获取单元格的值
-							value = cell.getStringCellValue();
+							value = cell.getStringCellValue().trim();
 						}
 					}
 					// ---将列值添加到列的list集合

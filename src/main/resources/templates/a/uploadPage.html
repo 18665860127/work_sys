@@ -6,12 +6,16 @@
 </head>
 <body>
 	<div style="margin: 10% 40%;">
-		<form action="/a/b" method="post">
+		<form enctype="multipart/form-data;" action="/a/b" method="post" >
 			<div style="margin: 5%;">
-				<input type="file" name="file">
+				<label for="nameFile"> 花名册: </label> <input type="file"
+					id="nameFile" name="nameFile">
 			</div>
-
-			<div  style="margin: 5%;">
+			<div style="margin: 5%;">
+				<label for="payFile"> 工资表: </label> <input type="file" id="payFile"
+					name="payFile">
+			</div>
+			<div style="margin: 5%;">
 				<input type="submit">
 			</div>
 
