@@ -1,16 +1,11 @@
 package com.jiang.work_sys.util.excel;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -19,9 +14,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class ExcelUtil {
+public class ExcelReadUtil {
 
 	public static List<List<List<String>>> readExcel(String path) throws InvalidFormatException, IOException {
 		return readExcel(path, null);
@@ -97,44 +91,7 @@ public class ExcelUtil {
 		return readExcel(file, sheetIndex, 0);
 	}
 
-	public static void createExcel(List<List<List<String>>> sheetList, OutputStream ostream) throws IOException {
-		createExcel(sheetList, ostream, ExcelEnum.EXCEL_XLSX, ExcelEnum.BASE_TEMPLATE);
-	}
-
-	public static void createExcel(List<List<List<String>>> sheetList, OutputStream ostream, ExcelEnum postfix,
-			ExcelEnum template) throws IOException {
-		Workbook wb = null;
-		try {
-			// 定义一个Excel表格
-			wb = getWorkbok(postfix);
-			// ---------------------------------------------输出对应的模板
-			ExcelExportFactory.getExportTemplate(template).exportExcel(wb, sheetList);
-			// --------------------------------------------end
-			// 输出流,下载时候的位置
-			wb.write(ostream);
-		} finally {
-			if (ostream != null) {
-				try {
-					ostream.flush();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				try {
-					ostream.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
-			if (wb != null) {
-				try {
-					wb.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
+	
 	/**
 	 * 
 	 * @Title: goRead
@@ -214,17 +171,6 @@ public class ExcelUtil {
 		return WorkbookFactory.create(file);
 	}
 
-	private static Workbook getWorkbok(ExcelEnum excelEnum) {
-		if (ExcelEnum.EXCEL_XLS.equals(excelEnum)) {
-			return new HSSFWorkbook();
-		} else {
-			return new XSSFWorkbook();
-		}
-	}
-
-	// private static String DecimalFormatTwo(Double val) {
-	// DecimalFormat df = new DecimalFormat("0.000");
-	// return df.format(val);
-	// }
+	
 
 }

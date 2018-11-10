@@ -1,7 +1,7 @@
 package com.jiang.work_sys.util.excel;
 
 public enum ExcelEnum {
-	EXCEL_XLS("xls"), EXCEL_XLSX("xlsx"), BASE_TEMPLATE("sheet_rows_cell");
+	EXCEL_XLS("xls"), EXCEL_XLSX("xlsx");
 	private final String type;
 
 	ExcelEnum(String type) {
