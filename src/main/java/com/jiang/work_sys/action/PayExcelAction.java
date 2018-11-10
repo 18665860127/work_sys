@@ -1,8 +1,6 @@
 package com.jiang.work_sys.action;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -10,11 +8,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSON;
 import com.jiang.work_sys.util.excel.ExcelEnum;
 import com.jiang.work_sys.util.excel.ExcelReadUtil;
 import com.jiang.work_sys.util.excel.ExcelWriteUtil;
@@ -40,14 +38,16 @@ public class PayExcelAction {
 		return "a/uploadPage";
 	}
 
+	private static ExecutorService threadPool = Executors.newFixedThreadPool(5);
+
 	private final static long maxFileSize = 10485760l;// 10MB
-	private final static String nameFilesPath = "d:/tempExcelFile/nameFiles/";
-	private final static String payFilesPath = "d:/tempExcelFile/payFiles/";
 
 	// private final static String nameFilesPath =
-	// "/usr/local/tempExcelFile/nameFiles/";
-	// private final static String payFilesPath =
-	// "/usr/local/tempExcelFile/payFiles/";
+	// "d:/tempExcelFile/nameFiles/";
+	// private final static String payFilesPath = "d:/tempExcelFile/payFiles/";
+
+	private final static String nameFilesPath = "/usr/local/tempExcelFile/nameFiles/";
+	private final static String payFilesPath = "/usr/local/tempExcelFile/payFiles/";
 
 	@RequestMapping("b")
 	public void uploadPayExcelChange(HttpServletRequest req, HttpServletResponse rep,
@@ -73,6 +73,7 @@ public class PayExcelAction {
 				return;
 			}
 		}
+		CountDownLatch latch = new CountDownLatch(2);
 		rep.setHeader("content-type", "application/octet-stream");
 		rep.setContentType("application/octet-stream; charset=utf-8");
 		rep.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("司机银行卡.xlsx", "UTF-8")); //
@@ -81,14 +82,41 @@ public class PayExcelAction {
 		File newNameFile = transferTo(nameFile, nameFilesPath, nowTime);
 		File newPayFile = transferTo(payFile, payFilesPath, nowTime);
 		// ----读花名册
-		Map<String, List<Map<String, String>>> basePersonInfo = readNewNameFile(newNameFile);
+		Map<String, List<Map<String, String>>> basePersonInfo = new HashMap<>();
+		threadPool.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					readNewNameFile(newNameFile, basePersonInfo);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					latch.countDown();
+				}
+			}
+		});
 		// ----读工资
-		List<Map<String, String>> payRecord = readNewPayFile(newPayFile);
+		List<Map<String, String>> payRecord = new ArrayList<>();
+		threadPool.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					readNewPayFile(newPayFile, payRecord);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					latch.countDown();
+				}
+			}
+		});
+
+		latch.await();
 		ExcelWriteUtil.payBankCard(basePersonInfo, payRecord, rep.getOutputStream());
 	}
 
-	private List<Map<String, String>> readNewPayFile(File newPayFile) throws InvalidFormatException, IOException {
-		List<Map<String, String>> payRecord = new ArrayList<>();
+	private List<Map<String, String>> readNewPayFile(File newPayFile, List<Map<String, String>> payRecord)
+			throws InvalidFormatException, IOException {
+		// List<Map<String, String>> payRecord = new ArrayList<>();
 		List<List<String>> sheet = ExcelReadUtil.readExcel(newPayFile, 0, 3);
 		for (int i = 0; i < sheet.size(); i++) {
 			List<String> row = sheet.get(i);
@@ -118,9 +146,9 @@ public class PayExcelAction {
 		return payRecord;
 	}
 
-	private Map<String, List<Map<String, String>>> readNewNameFile(File newNameFile)
-			throws InvalidFormatException, IOException {
-		Map<String, List<Map<String, String>>> person = new HashMap<>();
+	private Map<String, List<Map<String, String>>> readNewNameFile(File newNameFile,
+			Map<String, List<Map<String, String>>> person) throws InvalidFormatException, IOException {
+		// Map<String, List<Map<String, String>>> person = new HashMap<>();
 		List<List<List<String>>> readExcel = ExcelReadUtil.readExcel(newNameFile, new int[] { 2, 2 });
 		for (int j = 0; j < readExcel.size(); j++) {
 			List<List<String>> sheet = readExcel.get(j);
