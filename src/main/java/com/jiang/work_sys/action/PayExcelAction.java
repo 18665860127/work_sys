@@ -15,7 +15,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -42,16 +41,19 @@ public class PayExcelAction {
 
 	private final static long maxFileSize = 10485760l;// 10MB
 
-	// private final static String nameFilesPath =
-	// "d:/tempExcelFile/nameFiles/";
-	// private final static String payFilesPath = "d:/tempExcelFile/payFiles/";
+	private final static String nameFilesPath = "d:/tempExcelFile/nameFiles/";
+	private final static String payFilesPath = "d:/tempExcelFile/payFiles/";
 
-	private final static String nameFilesPath = "/usr/local/tempExcelFile/nameFiles/";
-	private final static String payFilesPath = "/usr/local/tempExcelFile/payFiles/";
+	private final static String payrolFilesPath = "d:/tempExcelFile/payrol/";
+
+	// private final static String nameFilesPath =
+	// "/usr/local/tempExcelFile/nameFiles/";
+	// private final static String payFilesPath =
+	// "/usr/local/tempExcelFile/payFiles/";
 
 	@RequestMapping("b")
-	public void uploadPayExcelChange(HttpServletRequest req, HttpServletResponse rep,
-			@RequestParam("nameFile") MultipartFile nameFile, @RequestParam("payFile") MultipartFile payFile)
+	public void uploadPayExcelChange(HttpServletResponse rep, @RequestParam("nameFile") MultipartFile nameFile,
+			@RequestParam("payFile") MultipartFile payFile, @RequestParam("exportType") String exportType)
 			throws Exception {
 		{
 			if (nameFile == null || payFile == null) {
@@ -109,9 +111,13 @@ public class PayExcelAction {
 				}
 			}
 		});
-
 		latch.await();
-		ExcelWriteUtil.payBankCard(basePersonInfo, payRecord, rep.getOutputStream());
+		if ("0".equals(exportType)) {
+			ExcelWriteUtil.payBankCard(basePersonInfo, payRecord, rep.getOutputStream());
+		}
+		if ("1".equals(exportType)) {
+			ExcelWriteUtil.payroll(basePersonInfo, payRecord, rep.getOutputStream());
+		}
 	}
 
 	private List<Map<String, String>> readNewPayFile(File newPayFile, List<Map<String, String>> payRecord)
@@ -123,9 +129,11 @@ public class PayExcelAction {
 			Map<String, String> pay = new HashMap<>();
 			for (int j = 0; j < row.size(); j++) {
 				String cell = row.get(j);
+				// 是否离职
 				if (j == 0) {
 					pay.put("status_t", cell);
 				}
+				// 姓名。作为唯一key
 				if (j == 2) {
 					if (StringUtils.isEmpty(cell)) {
 						break;
@@ -133,11 +141,89 @@ public class PayExcelAction {
 					pay.put("name", cell);
 					payRecord.add(pay);
 				}
+				// 车牌
+				if (j == 3) {
+					pay.put("plate_number", cell);
+				}
+				// 月份
+				if (j == 5) {
+					pay.put("month", cell);
+				}
+				// 上班天数
+				if (j == 6) {
+					pay.put("day_of_month", cell);
+				}
+				// 日薪
+				if (j == 7) {
+					pay.put("day_of_money", cell);
+				}
+				// 月薪
+				if (j == 8) {
+					pay.put("month_of_money", cell);
+				}
+				// 主班/补贴
+				if (j == 9) {
+					pay.put("subsidy", cell);
+				}
+				// 绩效工资
+				if (j == 10) {
+					pay.put("merit_pay", cell);
+				}
+				// 油耗扣奖
+				if (j == 11) {
+					pay.put("oil_wear_money", cell);
+				}
+				// 绩效奖罚
+				if (j == 12) {
+					pay.put("merit_fine", cell);
+				}
+				// 应付合计
+				if (j == 13) {
+					pay.put("payable_money", cell);
+				}
+				// 违章罚款
+				if (j == 14) {
+					pay.put("peccancy_fine", cell);
+				}
+				// 辞退风险金
 				if (j == 15) {
 					if (!StringUtils.isEmpty(cell)) {
 						pay.put("fengxian_money", cell);
 					}
 				}
+				// 扣风险金
+				if (j == 16) {
+					pay.put("fengxian_money_fine", cell);
+				}
+				// 意外险
+				if (j == 17) {
+					pay.put("accident_insurance", cell);
+				}
+				// 社保
+				if (j == 18) {
+					pay.put("social_security", cell);
+				}
+				// 借支
+				if (j == 19) {
+					pay.put("borrow_money", cell);
+				}
+				// 油耗转接
+				if (j == 20) {
+					pay.put("oil_wear_turn", cell);
+				}
+				// 扣工作服
+				if (j == 21) {
+					pay.put("work_cloths_money", cell);
+				}
+				// 调整上月
+				if (j == 22) {
+					pay.put("last_month", cell);
+				}
+				// 个人所得税
+				if (j == 23) {
+					pay.put("pit", cell);
+				}
+				// 实付工资
 				if (j == 24) {
 					pay.put("pay_money", cell);
 				}

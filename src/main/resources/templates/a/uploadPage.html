@@ -6,7 +6,8 @@
 </head>
 <body>
 	<div style="margin: 10% 40%;">
-		<form  action="/a/b" method="post" enctype="multipart/form-data" target="_blank">
+		<form action="/a/b" method="post" enctype="multipart/form-data"
+			target="_blank">
 			<div style="margin: 5%;">
 				<label for="nameFile"> 花名册: </label> <input type="file"
 					id="nameFile" name="nameFile">
@@ -15,10 +16,10 @@
 				<label for="payFile"> 工资表: </label> <input type="file" id="payFile"
 					name="payFile">
 			</div>
+			<input type="hidden" value="1" name="exportType">
 			<div style="margin: 5%;">
 				<input type="submit">
 			</div>
-
 		</form>
 	</div>
 </body>

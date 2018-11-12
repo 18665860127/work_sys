@@ -169,6 +169,92 @@ public class ExcelWriteUtil {
 
 	}
 
+	/**
+	 * 工资条
+	 * 
+	 * @param basePersonInfo
+	 * @param payRecord
+	 * @param ostream
+	 * @throws IOException
+	 */
+	public static void payroll(Map<String, List<Map<String, String>>> basePersonInfo,
+			List<Map<String, String>> payRecord, OutputStream ostream) throws IOException {
+		Workbook wb = null;
+		try {
+			// 定义一个Excel表格
+			wb = getWorkbok(ExcelEnum.EXCEL_XLSX);
+			Sheet sheet = wb.createSheet("工资条");
+			// -------记录行数index
+			int rowIndex = 0;
+			for (int i = 0; i < payRecord.size(); i++) {
+				Map<String, String> pay = payRecord.get(i);
+				// ----数据
+				String name = pay.get("name");
+				String status_t = pay.get("status_t");
+				String plate_number = pay.get("plate_number");
+				String month = pay.get("month");
+				String day_of_month = pay.get("day_of_month");
+				String day_of_money = pay.get("day_of_money");
+				String month_of_money = pay.get("month_of_money");
+				String subsidy = pay.get("subsidy");
+				String merit_pay = pay.get("merit_pay");
+				String oil_wear_money = pay.get("oil_wear_money");
+				String merit_fine = pay.get("merit_fine");
+				String payable_money = pay.get("payable_money");
+				String peccancy_fine = pay.get("peccancy_fine");
+				String fengxian_money = pay.get("fengxian_money");
+				String fengxian_money_fine = pay.get("fengxian_money_fine");
+				String accident_insurance = pay.get("accident_insurance");
+				String social_security = pay.get("social_security");
+				String borrow_money = pay.get("borrow_money");
+				String oil_wear_turn = pay.get("oil_wear_turn");
+				String work_cloths_money = pay.get("work_cloths_money");
+				String last_month = pay.get("last_month");
+				String pit = pay.get("pit");
+				String pay_money = decimalFormat.format(Double.parseDouble(pay.get("pay_money")));
+				String card_no = "";
+				String bank = "";
+				String card_from = "";
+				List<Map<String, String>> list = basePersonInfo.get(name);
+				if (list != null && list.size() != 0) {
+					Map<String, String> personInfo = list.get(0);
+					// status = personInfo.get("status");
+					card_no = personInfo.get("card_no");
+					bank = personInfo.get("bank");
+					card_from = personInfo.get("card_from");
+				}
+				// ----end
+				Row row1 = sheet.createRow(sheet.getPhysicalNumberOfRows());
+				Row row2 = sheet.createRow(sheet.getPhysicalNumberOfRows());
+				Row row3 = sheet.createRow(sheet.getPhysicalNumberOfRows());
+				Row row4 = sheet.createRow(sheet.getPhysicalNumberOfRows());
+			}
+			// --------------------------------------------end
+			// 输出流,下载时候的位置
+			wb.write(ostream);
+		} finally {
+			if (ostream != null) {
+				try {
+					ostream.flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					ostream.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			if (wb != null) {
+				try {
+					wb.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	private static Workbook getWorkbok(ExcelEnum excelEnum) {
 		if (ExcelEnum.EXCEL_XLS.equals(excelEnum)) {
 			return new HSSFWorkbook();
