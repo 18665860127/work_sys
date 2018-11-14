@@ -8,10 +8,13 @@ import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.StringUtils;
 
@@ -184,6 +187,13 @@ public class ExcelWriteUtil {
 			// 定义一个Excel表格
 			wb = getWorkbok(ExcelEnum.EXCEL_XLSX);
 			Sheet sheet = wb.createSheet("工资条");
+			CellStyle createCellStyle = wb.createCellStyle();
+			Font createFont = wb.createFont();
+			createFont.setFontName("微软雅黑");
+			createFont.setBold(true);
+//			createFont.setFontHeightInPoints((short) 7);
+//			createFont.setFontHeight((short) 7);
+			createCellStyle.setFont(createFont);
 			// -------记录行数index
 			int rowIndex = 0;
 			for (int i = 0; i < payRecord.size(); i++) {
@@ -228,9 +238,47 @@ public class ExcelWriteUtil {
 				Row row2 = sheet.createRow(sheet.getPhysicalNumberOfRows());
 				Row row3 = sheet.createRow(sheet.getPhysicalNumberOfRows());
 				Row row4 = sheet.createRow(sheet.getPhysicalNumberOfRows());
+				// -----------设置数据
+				String[] rowCell1 = new String[] { "", "姓名", "车牌", "月份", "上班天数", "每天底薪", "基本底薪", "主班/补贴", "绩效工资",
+						"油耗扣奖", "绩效奖罚", "应付合计", "违章罚款", "辞职退风险金", "扣风险金", "意外险", "社会保险", "借支", "油耗转接", "扣工作服", "调整上月",
+						"个人所得税", "实付工资" };
+				String[] rowCell2 = new String[] { status_t, name, plate_number, month, day_of_month, day_of_money,
+						month_of_money, subsidy, merit_pay, oil_wear_money, merit_fine, payable_money, peccancy_fine,
+						fengxian_money, fengxian_money_fine, accident_insurance, social_security, borrow_money,
+						oil_wear_turn, work_cloths_money, last_month, pit, pay_money };
+				String[] rowCell3 = new String[] { "", "账号（必填）", null, null, null, "户名（必填）", null, "行名", null, "开户支行",
+						null, "备注", null, null, "", null, null, null, null, null, null, null, null };
+				String[] rowCell4 = new String[] { "", card_no, null, null, null, name, null, bank, null, card_from,
+						null, "", null, null, "", null, null, null, null, null, null, null, null };
+				setRowCells(row1, rowCell1, createCellStyle);
+				setRowCells(row2, rowCell2, createCellStyle);
+				setRowCells(row3, rowCell3, createCellStyle);
+				setRowCells(row4, rowCell4, createCellStyle);
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 2, rowIndex + 2, 1, 4));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 2, rowIndex + 2, 5, 6));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 2, rowIndex + 2, 7, 8));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 2, rowIndex + 2, 9, 10));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 2, rowIndex + 2, 11, 13));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 2, rowIndex + 2, 14, 22));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 3, rowIndex + 3, 1, 4));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 3, rowIndex + 3, 5, 6));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 3, rowIndex + 3, 7, 8));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 3, rowIndex + 3, 9, 10));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 3, rowIndex + 3, 11, 13));
+				sheet.addMergedRegion(new CellRangeAddress(rowIndex + 3, rowIndex + 3, 14, 22));
+				rowIndex += 4;
 			}
 			// --------------------------------------------end
 			// 输出流,下载时候的位置
+			sheet.setDefaultRowHeightInPoints(35.1f);
+			// ---------设置列宽
+			float[] columnWith = new float[] { 0.92f, 3.72f, 7.22f, 1.22f, 2.85f, 3.6f, 3.35f, 2.97f, 3.85f, 3.6f,
+					3.35f, 3.97f, 3.6f, 4.35f, 3.22f, 2.85f, 4.72f, 3.97f, 3.85f, 2.47f, 2.85f, 3.1f, 5.85f };
+			for (int i = 0; i < columnWith.length; i++) {
+				int width = (int) (256 * columnWith[i] + 184);
+				sheet.setColumnWidth(i, width);
+				sheet.autoSizeColumn(column, useMergedCells);
+			}
 			wb.write(ostream);
 		} finally {
 			if (ostream != null) {
@@ -251,6 +299,19 @@ public class ExcelWriteUtil {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+		}
+	}
+
+	private static void setRowCells(Row row, String[] rowCell, CellStyle createCellStyle) {
+		
+		for (int j = 0; j < rowCell.length; j++) {
+			String val = rowCell[j];
+			if (val != null) {
+				Cell createCell = row.createCell(j);
+				createCell.setCellType(CellType.STRING);
+				createCell.setCellStyle(createCellStyle);
+				createCell.setCellValue(val);
 			}
 		}
 	}

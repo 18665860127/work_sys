@@ -78,7 +78,6 @@ public class PayExcelAction {
 		CountDownLatch latch = new CountDownLatch(2);
 		rep.setHeader("content-type", "application/octet-stream");
 		rep.setContentType("application/octet-stream; charset=utf-8");
-		rep.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("司机银行卡.xlsx", "UTF-8")); //
 		// 3.设置content-disposition响应头控制浏览器以下载的形式打开文件
 		long nowTime = System.currentTimeMillis();
 		File newNameFile = transferTo(nameFile, nameFilesPath, nowTime);
@@ -113,9 +112,11 @@ public class PayExcelAction {
 		});
 		latch.await();
 		if ("0".equals(exportType)) {
+			rep.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("司机银行卡.xlsx", "UTF-8")); //
 			ExcelWriteUtil.payBankCard(basePersonInfo, payRecord, rep.getOutputStream());
 		}
 		if ("1".equals(exportType)) {
+			rep.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("工资条.xlsx", "UTF-8")); //
 			ExcelWriteUtil.payroll(basePersonInfo, payRecord, rep.getOutputStream());
 		}
 	}
@@ -325,9 +326,4 @@ public class PayExcelAction {
 		return neFile;
 	}
 
-	public static void main(String[] args) {
-		Set<String> set = new HashSet<>();
-		boolean add = set.add("1");
-		System.out.println(add);
-	}
 }
