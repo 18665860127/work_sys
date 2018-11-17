@@ -7,12 +7,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -191,9 +194,16 @@ public class ExcelWriteUtil {
 			Font createFont = wb.createFont();
 			createFont.setFontName("微软雅黑");
 			createFont.setBold(true);
-//			createFont.setFontHeightInPoints((short) 7);
-//			createFont.setFontHeight((short) 7);
+			createFont.setFontHeightInPoints((short) 7);
 			createCellStyle.setFont(createFont);
+			createCellStyle.setBorderBottom(BorderStyle.THIN);
+			createCellStyle.setBorderLeft(BorderStyle.THIN);
+			createCellStyle.setBorderRight(BorderStyle.THIN);
+			createCellStyle.setBorderTop(BorderStyle.THIN);
+			createCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			createCellStyle.setAlignment(HorizontalAlignment.LEFT);
+			createCellStyle.setWrapText(true);
+			// createCellStyle.set
 			// -------记录行数index
 			int rowIndex = 0;
 			for (int i = 0; i < payRecord.size(); i++) {
@@ -220,8 +230,10 @@ public class ExcelWriteUtil {
 				String oil_wear_turn = pay.get("oil_wear_turn");
 				String work_cloths_money = pay.get("work_cloths_money");
 				String last_month = pay.get("last_month");
-				String pit = pay.get("pit");
-				String pay_money = decimalFormat.format(Double.parseDouble(pay.get("pay_money")));
+				String pit = StringUtils.isEmpty(pay.get("pit")) ? ""
+						: decimalFormat.format(Double.parseDouble(pay.get("pit")));
+				String pay_money = StringUtils.isEmpty(pay.get("pay_money")) ? ""
+						: decimalFormat.format(Double.parseDouble(pay.get("pay_money")));
 				String card_no = "";
 				String bank = "";
 				String card_from = "";
@@ -246,10 +258,10 @@ public class ExcelWriteUtil {
 						month_of_money, subsidy, merit_pay, oil_wear_money, merit_fine, payable_money, peccancy_fine,
 						fengxian_money, fengxian_money_fine, accident_insurance, social_security, borrow_money,
 						oil_wear_turn, work_cloths_money, last_month, pit, pay_money };
-				String[] rowCell3 = new String[] { "", "账号（必填）", null, null, null, "户名（必填）", null, "行名", null, "开户支行",
-						null, "备注", null, null, "", null, null, null, null, null, null, null, null };
-				String[] rowCell4 = new String[] { "", card_no, null, null, null, name, null, bank, null, card_from,
-						null, "", null, null, "", null, null, null, null, null, null, null, null };
+				String[] rowCell3 = new String[] { "", "账号（必填）", "", "", "", "户名（必填）", "", "行名", "", "开户支行", "", "备注",
+						"", "", "", "", "", "", "", "", "", "", "" };
+				String[] rowCell4 = new String[] { "", card_no, "", "", "", name, "", bank, "", card_from, "", "", "",
+						"", "", "", "", "", "", "", "", "", "" };
 				setRowCells(row1, rowCell1, createCellStyle);
 				setRowCells(row2, rowCell2, createCellStyle);
 				setRowCells(row3, rowCell3, createCellStyle);
@@ -270,14 +282,12 @@ public class ExcelWriteUtil {
 			}
 			// --------------------------------------------end
 			// 输出流,下载时候的位置
-			sheet.setDefaultRowHeightInPoints(35.1f);
 			// ---------设置列宽
 			float[] columnWith = new float[] { 0.92f, 3.72f, 7.22f, 1.22f, 2.85f, 3.6f, 3.35f, 2.97f, 3.85f, 3.6f,
 					3.35f, 3.97f, 3.6f, 4.35f, 3.22f, 2.85f, 4.72f, 3.97f, 3.85f, 2.47f, 2.85f, 3.1f, 5.85f };
 			for (int i = 0; i < columnWith.length; i++) {
-				int width = (int) (256 * columnWith[i] + 184);
+				int width = (int) (261 * columnWith[i] + 184);
 				sheet.setColumnWidth(i, width);
-				sheet.autoSizeColumn(column, useMergedCells);
 			}
 			wb.write(ostream);
 		} finally {
@@ -304,15 +314,13 @@ public class ExcelWriteUtil {
 	}
 
 	private static void setRowCells(Row row, String[] rowCell, CellStyle createCellStyle) {
-		
+		row.setHeightInPoints(35.1f);
 		for (int j = 0; j < rowCell.length; j++) {
 			String val = rowCell[j];
-			if (val != null) {
-				Cell createCell = row.createCell(j);
-				createCell.setCellType(CellType.STRING);
-				createCell.setCellStyle(createCellStyle);
-				createCell.setCellValue(val);
-			}
+			Cell createCell = row.createCell(j);
+			createCell.setCellType(CellType.STRING);
+			createCell.setCellStyle(createCellStyle);
+			createCell.setCellValue(val);
 		}
 	}
 
