@@ -7,10 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,8 +41,6 @@ public class PayExcelAction {
 
 	private final static String nameFilesPath = "d:/tempExcelFile/nameFiles/";
 	private final static String payFilesPath = "d:/tempExcelFile/payFiles/";
-
-	private final static String payrolFilesPath = "d:/tempExcelFile/payrol/";
 
 	// private final static String nameFilesPath =
 	// "/usr/local/tempExcelFile/nameFiles/";

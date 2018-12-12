@@ -23,8 +23,6 @@ import org.springframework.util.StringUtils;
 
 public class ExcelWriteUtil {
 
-	private static DecimalFormat decimalFormat = new DecimalFormat("0.##");
-
 	public static void payBankCard(Map<String, List<Map<String, String>>> basePersonInfo,
 			List<Map<String, String>> payRecord, OutputStream ostream) throws IOException {
 		Workbook wb = null;
@@ -46,8 +44,10 @@ public class ExcelWriteUtil {
 				Row createRow = null;
 				String name = pay.get("name");
 				String status_t = pay.get("status_t");
-				String pay_money = decimalFormat.format(Double.parseDouble(pay.get("pay_money")));
-				String fengxian_money = pay.get("fengxian_money");
+				String pay_money = StringUtils.isEmpty(pay.get("pay_money")) ? ""
+						: roundKeepZero(Double.parseDouble(pay.get("pay_money")));
+				String fengxian_money = StringUtils.isEmpty(pay.get("fengxian_money")) ? ""
+						: roundKeepZero(Double.parseDouble(pay.get("fengxian_money")));
 				// String status = "";
 				String card_no = "";
 				String bank = "";
@@ -134,7 +134,7 @@ public class ExcelWriteUtil {
 		}
 		{
 			Cell cell = row.createCell(3, CellType.STRING);
-			cell.setCellValue(decimalFormat.format(total));
+			cell.setCellValue(roundKeepZero(total));
 		}
 	}
 
@@ -210,30 +210,37 @@ public class ExcelWriteUtil {
 				Map<String, String> pay = payRecord.get(i);
 				// ----数据
 				String name = pay.get("name");
+				if (name.equals("谢勇")) {
+					System.out.println();
+				}
 				String status_t = pay.get("status_t");
 				String plate_number = pay.get("plate_number");
 				String month = pay.get("month");
 				String day_of_month = pay.get("day_of_month");
-				String day_of_money = pay.get("day_of_money");
+				String day_of_money = StringUtils.isEmpty(pay.get("day_of_money")) ? ""
+						: roundKeepOne(Double.parseDouble(pay.get("day_of_money")));
 				String month_of_money = pay.get("month_of_money");
 				String subsidy = pay.get("subsidy");
 				String merit_pay = pay.get("merit_pay");
-				String oil_wear_money = pay.get("oil_wear_money");
+				String oil_wear_money = StringUtils.isEmpty(pay.get("oil_wear_money")) ? ""
+						: roundKeepZero(Double.parseDouble(pay.get("oil_wear_money")));
 				String merit_fine = pay.get("merit_fine");
-				String payable_money = pay.get("payable_money");
+				String payable_money = StringUtils.isEmpty(pay.get("payable_money")) ? ""
+						: roundKeepZero(Double.parseDouble(pay.get("payable_money")));
 				String peccancy_fine = pay.get("peccancy_fine");
 				String fengxian_money = pay.get("fengxian_money");
 				String fengxian_money_fine = pay.get("fengxian_money_fine");
 				String accident_insurance = pay.get("accident_insurance");
-				String social_security = pay.get("social_security");
+				String social_security = StringUtils.isEmpty(pay.get("social_security")) ? ""
+						: roundKeepOne(Double.parseDouble(pay.get("social_security")));
 				String borrow_money = pay.get("borrow_money");
 				String oil_wear_turn = pay.get("oil_wear_turn");
 				String work_cloths_money = pay.get("work_cloths_money");
 				String last_month = pay.get("last_month");
 				String pit = StringUtils.isEmpty(pay.get("pit")) ? ""
-						: decimalFormat.format(Double.parseDouble(pay.get("pit")));
+						: roundKeepZero(Double.parseDouble(pay.get("pit")));
 				String pay_money = StringUtils.isEmpty(pay.get("pay_money")) ? ""
-						: decimalFormat.format(Double.parseDouble(pay.get("pay_money")));
+						: roundKeepZero(Double.parseDouble(pay.get("pay_money")));
 				String card_no = "";
 				String bank = "";
 				String card_from = "";
@@ -332,4 +339,25 @@ public class ExcelWriteUtil {
 		}
 	}
 
+	public static String roundKeepOne(double param) {
+		if (param < 0) {
+			param = 0 - param;
+			return "-" + ((double) Math.round(param * 10) / 10);
+		} else {
+			return ((double) Math.round(param * 10) / 10) + "";
+		}
+	}
+
+	public static String roundKeepZero(double param) {
+		if (param < 0) {
+			param = 0 - param;
+			return "-" + (Math.round(param)) + "";
+		} else {
+			return (Math.round(param)) + "";
+		}
+	}
+
+	public static void main(String[] args) {
+		System.out.println(roundKeepOne(205.35));
+	}
 }
