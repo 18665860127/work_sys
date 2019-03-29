@@ -218,7 +218,7 @@ public class ExcelWriteUtil {
 				String month = pay.get("month");
 				String day_of_month = pay.get("day_of_month");
 				String day_of_money = StringUtils.isEmpty(pay.get("day_of_money")) ? ""
-						: roundKeepOne(Double.parseDouble(pay.get("day_of_money")));
+						: roundKeepTwo(Double.parseDouble(pay.get("day_of_money")));
 				String month_of_money = pay.get("month_of_money");
 				String subsidy = pay.get("subsidy");
 				String merit_pay = pay.get("merit_pay");
@@ -345,6 +345,15 @@ public class ExcelWriteUtil {
 			return "-" + ((double) Math.round(param * 10) / 10);
 		} else {
 			return ((double) Math.round(param * 10) / 10) + "";
+		}
+	}
+
+	public static String roundKeepTwo(double param) {
+		if (param < 0) {
+			param = 0 - param;
+			return "-" + ((double) Math.round(param * 100) / 100);
+		} else {
+			return ((double) Math.round(param * 100) / 100) + "";
 		}
 	}
 
