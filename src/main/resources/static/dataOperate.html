@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div>
+		<table id="student-table" border="1" cellspacing="0">
+			<!-- 			<tr><th>序号</th> -->
+			<!-- 				<th>姓名</th> -->
+			<!-- 				<th>年龄</th> -->
+			<!-- 			</tr> -->
+			<!-- 			<tr> -->
+			<!-- 				<td>1</td> -->
+			<!-- 				<td>学生1</td> -->
+			<!-- 				<td>20</td> -->
+			<!-- 			</tr> -->
+		</table>
+	</div>
+	<script type="text/javascript">
+		window.onload = function() {
+			query();
+		}
+		//---发生post请求
+		function doPost(url, data, callback) {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					// 					document.getElementById("demo").innerHTML = this.responseText;
+					callback(this.responseText);
+				}
+			};
+			xhttp.open("POST", url, true);
+			xhttp.setRequestHeader("Content-type",
+					"application/x-www-form-urlencoded");
+			xhttp.send(data);
+		}
+
+		//查詢
+		function query() {
+			doPost(
+					"http://tsunayoshi.cn/dataOperate/query",
+					"",
+					function(result) {
+						//打印到控制台查看
+						console.log(result);
+						//字符串转json对象
+						var jsonResult = JSON.parse(result);
+						//----定义table标签内容
+						var tableHtml = "<tr><th>序号</th><th>姓名</th><th>年龄</th><th>操作</th></tr>";
+						//获取students数组
+						var students = jsonResult.students;
+						//遍历数组获取每个学生
+						for (var i = 0; i < students.length; i++) {
+							var student = students[i];
+							tableHtml = tableHtml + "<tr><td>" + (i + 1)
+									+ "</td><td>" + student.studentName
+									+ "</td><td>" + student.studentAge
+									+ "</td><td><button onclick='del(\""
+									+ student.studentId
+									+ "\")'>删除</button></td></tr>";
+						}
+						//--将内容放入table
+						document.getElementById("student-table").innerHTML = tableHtml;
+					});
+		}
+		//刪除
+		function del(studentId) {
+			//-----flag为true时即为用户点击确认
+			var flag = confirm("请确认是否删除此条记录？");
+			if (!flag) {
+				return false;
+			}
+			doPost("http://tsunayoshi.cn/dataOperate/del", "studentId="
+					+ studentId, function(result) {
+				//打印到控制台查看
+				console.log(result);
+				//字符串转json对象
+				var jsonResult = JSON.parse(result);
+				var isSuccess = jsonResult.isSuccess;
+				//---1为删除成功，2为删除失败
+				if (isSuccess == '1') {
+					query();
+					alert(jsonResult.msg);
+				} else {
+					alert(jsonResult.msg);
+				}
+			});
+		}
+
+		//编辑------------传送参数：studentId,studentName,studentAge,返回参数:{"msg":"成功","isSuccess":"1"},isSuccess为1是代表成功，0为失败
+		//接口url为:http://tsunayoshi.cn/dataOperate/edit
+		function edit() {
+
+		}
+		//增加------------传送参数：studentName,studentAge,返回参数:{"msg":"成功","isSuccess":"1"},isSuccess为1是代表成功，0为失败
+		//接口url为:http://tsunayoshi.cn/dataOperate/add
+		function add() {
+
+		}
+	</script>
+</body>
+</html>

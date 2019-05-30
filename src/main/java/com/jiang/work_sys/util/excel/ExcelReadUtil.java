@@ -125,7 +125,8 @@ public class ExcelReadUtil {
 			if (row != null) {
 				// ---列数
 				List<String> cellsList = new ArrayList<>();
-				int firstCellNum = row.getFirstCellNum();
+//				int firstCellNum = row.getFirstCellNum();
+				int firstCellNum = 0;
 				int lastCellNum = row.getLastCellNum();
 				for (int cIndex = firstCellNum; cIndex < lastCellNum; cIndex++) {
 					Cell cell = row.getCell(cIndex);

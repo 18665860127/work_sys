@@ -39,13 +39,11 @@ public class PayExcelAction {
 
 	private final static long maxFileSize = 10485760l;// 10MB
 
-	private final static String nameFilesPath = "d:/tempExcelFile/nameFiles/";
-	private final static String payFilesPath = "d:/tempExcelFile/payFiles/";
+//	private final static String nameFilesPath = "d:/tempExcelFile/nameFiles/";
+//	private final static String payFilesPath = "d:/tempExcelFile/payFiles/";
 
-	// private final static String nameFilesPath =
-	// "/usr/local/tempExcelFile/nameFiles/";
-	// private final static String payFilesPath =
-	// "/usr/local/tempExcelFile/payFiles/";
+	private final static String nameFilesPath = "/usr/local/tempExcelFile/nameFiles/";
+	private final static String payFilesPath = "/usr/local/tempExcelFile/payFiles/";
 
 	@RequestMapping("b")
 	public void uploadPayExcelChange(HttpServletResponse rep, @RequestParam("nameFile") MultipartFile nameFile,

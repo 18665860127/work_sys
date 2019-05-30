@@ -48,6 +48,12 @@ public class ExcelWriteUtil {
 						: roundKeepZero(Double.parseDouble(pay.get("pay_money")));
 				String fengxian_money = StringUtils.isEmpty(pay.get("fengxian_money")) ? ""
 						: roundKeepZero(Double.parseDouble(pay.get("fengxian_money")));
+				
+				
+				if(StringUtils.isEmpty(pay_money)){
+					System.out.println();
+				}
+				
 				// String status = "";
 				String card_no = "";
 				String bank = "";
