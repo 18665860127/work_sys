@@ -35,15 +35,17 @@ public class PayExcelAction {
 		return "a/uploadPage";
 	}
 
-	private static ExecutorService threadPool = Executors.newFixedThreadPool(5);
+	private static ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
 	private final static long maxFileSize = 10485760l;// 10MB
 
 //	private final static String nameFilesPath = "d:/tempExcelFile/nameFiles/";
 //	private final static String payFilesPath = "d:/tempExcelFile/payFiles/";
 
-	private final static String nameFilesPath = "/usr/local/tempExcelFile/nameFiles/";
-	private final static String payFilesPath = "/usr/local/tempExcelFile/payFiles/";
+	private final static String nameFilesPath = System.getProperty("user.dir") + File.separator + "nameFiles"
+			+ File.separator;
+	private final static String payFilesPath = System.getProperty("user.dir") + File.separator + "payFiles"
+			+ File.separator;
 
 	@RequestMapping("b")
 	public void uploadPayExcelChange(HttpServletResponse rep, @RequestParam("nameFile") MultipartFile nameFile,

@@ -9,6 +9,6 @@ public class WorkSysApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WorkSysApplication.class, args);
-		
+		System.out.println(System.getProperty("user.dir"));
 	}
 }
