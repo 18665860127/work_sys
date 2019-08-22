@@ -35,7 +35,7 @@ public class PayExcelAction {
 		return "a/uploadPage";
 	}
 
-	private static ExecutorService threadPool = Executors.newFixedThreadPool(2);
+	private static ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()+1);
 
 	private final static long maxFileSize = 10485760l;// 10MB
 
