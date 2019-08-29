@@ -48,12 +48,7 @@ public class ExcelWriteUtil {
 						: roundKeepZero(Double.parseDouble(pay.get("pay_money")));
 				String fengxian_money = StringUtils.isEmpty(pay.get("fengxian_money")) ? ""
 						: roundKeepZero(Double.parseDouble(pay.get("fengxian_money")));
-				
-				
-				if(StringUtils.isEmpty(pay_money)){
-					System.out.println();
-				}
-				
+
 				// String status = "";
 				String card_no = "";
 				String bank = "";
@@ -70,17 +65,23 @@ public class ExcelWriteUtil {
 					int lastRowNum = fengxian.getPhysicalNumberOfRows();
 					// lastRowNum++;
 					createRow = fengxian.createRow(lastRowNum);
-					totalFengXian += Double.parseDouble(pay_money);
+					if (!StringUtils.isEmpty(pay_money)) {
+						totalFengXian += Double.parseDouble(pay_money);
+					}
 				} else if (status_t.contains("离职")) {
 					int lastRowNum = lizhi.getPhysicalNumberOfRows();
 					// lastRowNum++;
 					createRow = lizhi.createRow(lastRowNum);
-					totalLiZhi += Double.parseDouble(pay_money);
+					if (!StringUtils.isEmpty(pay_money)) {
+						totalLiZhi += Double.parseDouble(pay_money);
+					}
 				} else {
 					int lastRowNum = zaizhi.getPhysicalNumberOfRows();
 					// lastRowNum++;
 					createRow = zaizhi.createRow(lastRowNum);
-					totalZaiZhi += Double.parseDouble(pay_money);
+					if (!StringUtils.isEmpty(pay_money)) {
+						totalZaiZhi += Double.parseDouble(pay_money);
+					}
 				}
 				if (createRow != null) {
 					int index = createRow.getRowNum();
