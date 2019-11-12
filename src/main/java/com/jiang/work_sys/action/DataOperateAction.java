@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -72,7 +73,7 @@ public class DataOperateAction {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		Map<String, String[]> parameterMap = req.getParameterMap();
 		String studentId = parameterMap.get("studentId")[0];
-		if (studentMap.get(studentId) == null) {
+		if (Objects.isNull(studentMap.get(studentId))) {
 			resultMap.put("isSuccess", "0");
 			resultMap.put("msg", "删除失败，学生不存在");
 			return resultMap;
@@ -100,7 +101,7 @@ public class DataOperateAction {
 			String studentAge = parameterMap.get("studentAge")[0];
 			String studentId = parameterMap.get("studentId")[0];
 			Map<String, String> student = studentMap.get(studentId);
-			if (student == null) {
+			if (Objects.isNull(student)) {
 				resultMap.put("isSuccess", "0");
 				resultMap.put("msg", "修改失败，学生不存在");
 				return resultMap;

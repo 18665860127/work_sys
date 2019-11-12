@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -39,7 +40,7 @@ public class ExcelReadUtil {
 		// 判断文件是否存在
 		if (file.isFile() && file.exists()) {
 			Workbook wb = getWorkbok(file);
-			if (wb == null) {
+			if (Objects.isNull(wb)) {
 				throw new InvalidFormatException("excel格式错误！！！！");
 			}
 			int sheets_num = wb.getNumberOfSheets();
@@ -48,7 +49,7 @@ public class ExcelReadUtil {
 				List<List<String>> rowsList = new ArrayList<>();
 				// 开始解析
 				int tempIndex = 0;
-				if (firstRowIndex != null && firstRowIndex.length != 0) {
+				if (Objects.nonNull(firstRowIndex) && firstRowIndex.length != 0) {
 					if (firstRowIndex.length > i) {
 						tempIndex = firstRowIndex[i];
 					}
@@ -86,22 +87,18 @@ public class ExcelReadUtil {
 	public static List<List<String>> readExcel(String path, int sheetIndex) throws InvalidFormatException, IOException {
 		return readExcel(path, sheetIndex, 0);
 	}
-	
+
 	public static List<List<String>> readExcel(File file, int sheetIndex) throws InvalidFormatException, IOException {
 		return readExcel(file, sheetIndex, 0);
 	}
 
-	
 	/**
 	 * 
 	 * @Title: goRead
 	 * @Description:
-	 * @param rowsList
-	 *            行
-	 * @param sheetIndex
-	 *            表
-	 * @param firstRowIndex
-	 *            第一行
+	 * @param rowsList      行
+	 * @param sheetIndex    表
+	 * @param firstRowIndex 第一行
 	 * @param wb
 	 * @throws InvalidFormatException
 	 * @return void 返回类型
@@ -110,7 +107,7 @@ public class ExcelReadUtil {
 	 */
 	private static void goRead(List<List<String>> rowsList, int sheetIndex, int firstRowIndex, Workbook wb)
 			throws InvalidFormatException {
-		if (wb == null) {
+		if (Objects.isNull(wb)) {
 			throw new InvalidFormatException("excel格式错误！！！！");
 		}
 		// 开始解析
@@ -122,7 +119,7 @@ public class ExcelReadUtil {
 		for (int rIndex = firstRowNum; rIndex <= lastRowNum; rIndex++) {
 			// 获取当前行的内容
 			Row row = sheet.getRow(rIndex);
-			if (row != null) {
+			if (Objects.nonNull(row)) {
 				// ---列数
 				List<String> cellsList = new ArrayList<>();
 //				int firstCellNum = row.getFirstCellNum();
@@ -131,7 +128,7 @@ public class ExcelReadUtil {
 				for (int cIndex = firstCellNum; cIndex < lastCellNum; cIndex++) {
 					Cell cell = row.getCell(cIndex);
 					String value = "";
-					if (cell != null) {
+					if (Objects.nonNull(cell)) {
 						if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
 							if (DateUtil.isCellDateFormatted(cell)) {
 								value = new SimpleDateFormat("yyyy-MM-dd").format(cell.getDateCellValue());
@@ -171,7 +168,5 @@ public class ExcelReadUtil {
 	private static Workbook getWorkbok(File file) throws InvalidFormatException, IOException {
 		return WorkbookFactory.create(file);
 	}
-
-	
 
 }

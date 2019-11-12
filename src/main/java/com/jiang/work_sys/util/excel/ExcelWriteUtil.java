@@ -2,9 +2,9 @@ package com.jiang.work_sys.util.excel;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -54,7 +54,7 @@ public class ExcelWriteUtil {
 				String bank = "";
 				String card_from = "";
 				List<Map<String, String>> list = basePersonInfo.get(name);
-				if (list != null && list.size() != 0) {
+				if (Objects.nonNull(list) && list.size() != 0) {
 					Map<String, String> personInfo = list.get(0);
 					// status = personInfo.get("status");
 					card_no = personInfo.get("card_no");
@@ -83,7 +83,7 @@ public class ExcelWriteUtil {
 						totalZaiZhi += Double.parseDouble(pay_money);
 					}
 				}
-				if (createRow != null) {
+				if (Objects.nonNull(createRow)) {
 					int index = createRow.getRowNum();
 					createRow.createCell(0, CellType.STRING).setCellValue(index);
 					createRow.createCell(1, CellType.STRING).setCellValue(card_no);
@@ -97,7 +97,7 @@ public class ExcelWriteUtil {
 					createRow.createCell(5, CellType.STRING).setCellValue(bank);
 					createRow.createCell(6, CellType.STRING).setCellValue(card_from);
 					createRow.createCell(7, CellType.STRING).setCellValue("");
-					if (list != null && list.size() > 1) {
+					if (Objects.nonNull(list) && list.size() > 1) {
 						createRow.createCell(8, CellType.STRING).setCellValue("花名册存在重复数据，请手工确认信息是否正确！！！");
 					}
 				}
@@ -111,7 +111,7 @@ public class ExcelWriteUtil {
 			// 输出流,下载时候的位置
 			wb.write(ostream);
 		} finally {
-			if (ostream != null) {
+			if (Objects.nonNull(ostream)) {
 				try {
 					ostream.flush();
 				} catch (IOException e1) {
@@ -123,7 +123,7 @@ public class ExcelWriteUtil {
 					e1.printStackTrace();
 				}
 			}
-			if (wb != null) {
+			if (Objects.nonNull(wb)) {
 				try {
 					wb.close();
 				} catch (IOException e) {
@@ -252,7 +252,7 @@ public class ExcelWriteUtil {
 				String bank = "";
 				String card_from = "";
 				List<Map<String, String>> list = basePersonInfo.get(name);
-				if (list != null && list.size() != 0) {
+				if (Objects.nonNull(list) && list.size() != 0) {
 					Map<String, String> personInfo = list.get(0);
 					// status = personInfo.get("status");
 					card_no = personInfo.get("card_no");
@@ -305,7 +305,7 @@ public class ExcelWriteUtil {
 			}
 			wb.write(ostream);
 		} finally {
-			if (ostream != null) {
+			if (Objects.nonNull(ostream)) {
 				try {
 					ostream.flush();
 				} catch (IOException e1) {
@@ -317,7 +317,7 @@ public class ExcelWriteUtil {
 					e1.printStackTrace();
 				}
 			}
-			if (wb != null) {
+			if (Objects.nonNull(wb)) {
 				try {
 					wb.close();
 				} catch (IOException e) {

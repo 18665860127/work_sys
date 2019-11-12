@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -52,7 +53,7 @@ public class PayExcelAction {
 			@RequestParam("payFile") MultipartFile payFile, @RequestParam("exportType") String exportType)
 			throws Exception {
 		{
-			if (nameFile == null || payFile == null) {
+			if (Objects.isNull(nameFile) || Objects.isNull(payFile)) {
 				return;
 			}
 			String originalFilename = nameFile.getOriginalFilename();
@@ -246,7 +247,7 @@ public class PayExcelAction {
 								break;
 							}
 							List<Map<String, String>> list = person.get(cell);
-							if (list == null) {
+							if (Objects.isNull(list)) {
 								list = new ArrayList<>();
 								person.put(cell, list);
 							}
@@ -280,7 +281,7 @@ public class PayExcelAction {
 								break;
 							}
 							List<Map<String, String>> list = person.get(cell);
-							if (list == null) {
+							if (Objects.isNull(list)) {
 								list = new ArrayList<>();
 								person.put(cell, list);
 							}
@@ -308,7 +309,7 @@ public class PayExcelAction {
 
 	private File transferTo(MultipartFile sourceFile, String path, long nowTime)
 			throws IllegalStateException, IOException {
-		if (sourceFile == null) {
+		if (Objects.isNull(sourceFile)) {
 			return null;
 		}
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
