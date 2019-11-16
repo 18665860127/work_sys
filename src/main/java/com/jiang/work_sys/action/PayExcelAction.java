@@ -38,14 +38,14 @@ public class PayExcelAction {
 
 	private static ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()+1);
 
-	private final static long maxFileSize = 10485760l;// 10MB
+	private static final long maxFileSize = 10485760l;// 10MB
 
-//	private final static String nameFilesPath = "d:/tempExcelFile/nameFiles/";
-//	private final static String payFilesPath = "d:/tempExcelFile/payFiles/";
+//	private static final String nameFilesPath = "d:/tempExcelFile/nameFiles/";
+//	private static final String payFilesPath = "d:/tempExcelFile/payFiles/";
 
-	private final static String nameFilesPath = System.getProperty("user.dir") + File.separator + "nameFiles"
+	private static final String nameFilesPath = System.getProperty("user.dir") + File.separator + "nameFiles"
 			+ File.separator;
-	private final static String payFilesPath = System.getProperty("user.dir") + File.separator + "payFiles"
+	private static final String payFilesPath = System.getProperty("user.dir") + File.separator + "payFiles"
 			+ File.separator;
 
 	@RequestMapping("b")
